@@ -38,17 +38,18 @@ def click_and_crop(event, x, y, flags, param):
 
 
 # SELECT REGION IN SEPARATE WINDOW
-cv2.namedWindow("image")
-cv2.setMouseCallback("image", click_and_crop)
+cv2.namedWindow("Choose Region")
+cv2.setMouseCallback("Choose Region", click_and_crop)
 
 # original screenshot is stored in bgr and we use a copy to show the selection
 image = bgr.copy()
-cv2.imshow('image', image)
+cv2.imshow('Choose Region', image)
 cv2.waitKey(1)
 
 cx = cy = []
 
-while cropping or not px:
+key = 0
+while key != 27 and (cropping or not px):
     if cropping and (set(cx) != set(px) or set(cy) != set(py)):
         # clear the selection by copying the region from original image
         if cx:
@@ -58,17 +59,18 @@ while cropping or not px:
         cy = sorted(py)
 
         cv2.rectangle(image, (cx[0], cy[0]), (cx[1], cy[1]), (0, 255, 0), 1)
-        cv2.imshow('image', image)
+        cv2.imshow('Choose Region', image)
 
-    cv2.waitKey(1)
+    key = cv2.waitKey(1)
 
-cv2.destroyWindow("image")
+cv2.destroyWindow("Choose Region")
 cv2.waitKey(1)
 cv2.waitKey(1)  # workaround for opencv(?) bug
 cv2.waitKey(1)  # workaround for opencv(?) bug
 cv2.waitKey(1)  # workaround for opencv(?) bug
 
-# OCR THE SELECTION AND SEND IT TO CLIPBOARD
-roi = bgr[cy[0]:cy[1], cx[0]:cx[1]]
-text = pytesseract.image_to_string(roi)
-pyperclip.copy(text)
+if key != 27:
+    # OCR THE SELECTION AND SEND IT TO CLIPBOARD
+    roi = bgr[cy[0]:cy[1], cx[0]:cx[1]]
+    text = pytesseract.image_to_string(roi)
+    pyperclip.copy(text)
