@@ -1,0 +1,13 @@
+channels:
+  - conda-forge
+
+dependencies:
+  - python=3.7.5
+  - python-mss=6.1.0
+  - tesseract=4.1.1
+  - pytesseract=0.3.7
+  - opencv=4.5.1
+
+  - pip=20.1
+  - pip:
+    - pyperclip==1.8.2
